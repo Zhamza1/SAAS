@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  backend:
+    image: node:20.6.0
+    container_name: adonis-backend
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    command: ["sh", "-c", "npm install && node -r ts-node/register ace serve --watch"]
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://prisma:prisma@postgres:5432/prisma_db
+      NODE_ENV: development
+    stdin_open: true
+    tty: true
+
+  frontend:
+    image: node:20.6.0
+    container_name: next-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+    working_dir: /usr/src/app
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: prisma_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
