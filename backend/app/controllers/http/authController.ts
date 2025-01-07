@@ -10,16 +10,21 @@ export default class AuthController {
 
   public async register(ctx: HttpContext) {
     try {
-      const data = ctx.request.only(['email', 'password', 'name', 'firstname'])
-
+      const data = ctx.request.only(['email', 'password', 'name', 'firstname', 'role'])
+      
+      // Rôle "client" par défaut
+      const registrationData = {
+        ...data,
+        role: data.role || 'client'
+      };
+  
       if (!this.validateRegistrationData(data)) {
         return ctx.response.status(400).json({
           error: 'Tous les champs sont requis',
         })
       }
-
-      const result = await this.authService.register(data)
-
+  
+      const result = await this.authService.register(registrationData)
       return ctx.response.status(201).json(result)
     } catch (error) {
       if (error instanceof Error && error.message.includes('unique constraint')) {
@@ -27,7 +32,7 @@ export default class AuthController {
           error: 'Cet email est déjà utilisé',
         })
       }
-
+  
       return ctx.response.status(400).json({
         error: "Erreur lors de l'inscription",
         details: error instanceof Error ? error.message : 'Erreur inconnue',

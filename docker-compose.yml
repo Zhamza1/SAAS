@@ -6,6 +6,7 @@ services:
     container_name: adonis-backend
     ports:
       - "3333:3333"
+      - "5555:5555"
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -27,7 +28,7 @@ services:
     volumes:
       - ./frontend:/usr/src/app
     working_dir: /usr/src/app
-    command: ["npm", "run", "dev"]
+    command: [ "sh", "-c", "npm install && npm run dev" ]
     depends_on:
       - backend
     stdin_open: true

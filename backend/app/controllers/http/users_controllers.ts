@@ -49,7 +49,7 @@ export default class UsersController {
 
   public async store({ request, response }: HttpContext) {
     try {
-      const data = request.only(['email', 'name', 'password', 'firstname'])
+      const data = request.only(['email', 'name', 'password', 'firstname', 'role'])
 
       if (!data.email || !data.name || !data.password || !data.firstname) {
         return response.status(400).json({
