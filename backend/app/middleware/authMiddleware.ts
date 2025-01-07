@@ -1,6 +1,6 @@
-import type { HttpContext } from '@adonisjs/core/http';
-import type { NextFn } from '@adonisjs/core/types/http';
-import { JwtService } from '#services/jwtService';
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { JwtService } from '#services/jwtService'
 
 interface AuthenticatedData {
   userId: number
@@ -18,33 +18,32 @@ declare module '@adonisjs/core/http' {
 }
 
 export default class AuthMiddleware {
-  private jwtService: JwtService;
+  private jwtService: JwtService
 
   constructor() {
-    this.jwtService = new JwtService();
+    this.jwtService = new JwtService()
   }
 
   async handle(ctx: HttpContext, next: NextFn) {
-    const authHeader = ctx.request.header('Authorization');
+    const token = ctx.request.cookie('authToken')
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return ctx.response.status(401).json({
-        error: 'Token manquant ou invalide'
-      });
+        error: 'Token manquant ou invalide',
+      })
     }
 
     try {
-      const token = authHeader.split(' ')[1];
-      const decoded = this.jwtService.verifyToken(token);
-      
-      ctx.auth = { user: decoded };
-      
-      await next();
+      const decoded = this.jwtService.verifyToken(token)
+
+      ctx.auth = { user: decoded }
+
+      await next()
     } catch (error) {
       return ctx.response.status(401).json({
         error: 'Token invalide ou expiré',
-        details: error instanceof Error ? error.message : 'Erreur inconnue'
-      });
+        details: error instanceof Error ? error.message : 'Erreur inconnue',
+      })
     }
   }
 }

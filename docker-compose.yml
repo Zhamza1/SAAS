@@ -2,11 +2,10 @@ version: "3.8"
 
 services:
   backend:
-    image: node:20.6.0
+    image: node:21
     container_name: adonis-backend
     ports:
-      - "80:80"
-      - "5555:5555"
+      - "3333:3333"
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -21,7 +20,7 @@ services:
     tty: true
 
   frontend:
-    image: node:20.6.0
+    image: node:21
     container_name: next-frontend
     ports:
       - "3000:3000"
