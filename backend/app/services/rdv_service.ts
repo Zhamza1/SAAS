@@ -28,6 +28,9 @@ export class RdvService {
             updatedAt: true
           }
         }
+      },
+      orderBy: {
+        date: 'asc'  // Tri par date de RDV
       }
     });
   
@@ -39,27 +42,27 @@ export class RdvService {
       where: { id },
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
           }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
       }
     });
   }
@@ -71,30 +74,30 @@ export class RdvService {
       },
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
           }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
       },
       orderBy: {
-        createdAt: 'desc'
+        date: 'asc'  // Tri par date de RDV
       }
     });
   }
@@ -106,68 +109,69 @@ export class RdvService {
       },
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
           }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
       },
       orderBy: {
-        createdAt: 'desc'
+        date: 'asc'  // Tri par date de RDV
       }
     });
   }
 
-  async createRdv(data: { coachId: number; clientId: number }) {
+  async createRdv(data: { coachId: number; clientId: number; date: Date }) {
     return await prisma.rdv.create({
       data: {
         coach: { connect: { id: data.coachId } },
-        client: { connect: { id: data.clientId } }
+        client: { connect: { id: data.clientId } },
+        date: data.date
       },
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
           }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
       }
     });
   }
 
-  async updateRdv(id: number, data: { coachId?: number; clientId?: number }) {
+  async updateRdv(id: number, data: { coachId?: number; clientId?: number; date?: Date }) {
     const updateData: any = {};
     
     if (data.coachId) {
@@ -176,33 +180,36 @@ export class RdvService {
     if (data.clientId) {
       updateData.client = { connect: { id: data.clientId } };
     }
+    if (data.date) {
+      updateData.date = data.date;
+    }
 
     return await prisma.rdv.update({
       where: { id },
       data: updateData,
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
           }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
       }
     });
   }

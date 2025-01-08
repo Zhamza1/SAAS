@@ -49,11 +49,11 @@ export default class RdvsController {
 
   public async store({ request, response }: HttpContext) {
     try {
-      const data = request.only(['coachId', 'clientId'])
+      const data = request.only(['coachId', 'clientId', 'date'])
 
-      if (!data.coachId || !data.clientId) {
+      if (!data.coachId || !data.clientId || !data.date) {
         return response.status(400).json({
-          error: 'Les champs coachId et clientId sont requis',
+          error: 'Les champs coachId, clientId et date sont requis',
         })
       }
 
@@ -67,7 +67,25 @@ export default class RdvsController {
         })
       }
 
-      const rdv = await this.rdvService.createRdv(data)
+      // Validation de la date
+      const date = new Date(data.date)
+      if (isNaN(date.getTime())) {
+        return response.status(400).json({
+          error: 'La date fournie est invalide',
+        })
+      }
+
+      // Vérification que la date n'est pas dans le passé
+      if (date < new Date()) {
+        return response.status(400).json({
+          error: 'La date du rendez-vous ne peut pas être dans le passé',
+        })
+      }
+
+      const rdv = await this.rdvService.createRdv({
+        ...data,
+        date: date
+      })
       return response.status(201).json(rdv)
     } catch (error) {
       return response.status(400).json({
@@ -87,7 +105,7 @@ export default class RdvsController {
         })
       }
 
-      const data = request.only(['coachId', 'clientId'])
+      const data = request.only(['coachId', 'clientId', 'date'])
 
       if (Object.keys(data).length === 0) {
         return response.status(400).json({
@@ -112,6 +130,25 @@ export default class RdvsController {
             error: 'Le clientId doit être un nombre',
           })
         }
+      }
+
+      // Validation de la date si fournie
+      if (data.date) {
+        const date = new Date(data.date)
+        if (isNaN(date.getTime())) {
+          return response.status(400).json({
+            error: 'La date fournie est invalide',
+          })
+        }
+
+        // Vérification que la date n'est pas dans le passé
+        if (date < new Date()) {
+          return response.status(400).json({
+            error: 'La date du rendez-vous ne peut pas être dans le passé',
+          })
+        }
+
+        data.date = date
       }
 
       const rdv = await this.rdvService.updateRdv(id, data)
