@@ -49,33 +49,38 @@ export default class RdvsController {
 
   public async store({ request, response }: HttpContext) {
     try {
-      const data = request.only(['coachId', 'clientId'])
+      const data = request.only(['coachId', 'clientId', 'date']); // Include 'date'
 
-      if (!data.coachId || !data.clientId) {
+      if (!data.coachId || !data.clientId || !data.date) {
         return response.status(400).json({
-          error: 'Les champs coachId et clientId sont requis',
-        })
+          error: 'Les champs coachId, clientId et date sont requis',
+        });
       }
 
-      // Conversion des ID en nombres
-      data.coachId = Number(data.coachId)
-      data.clientId = Number(data.clientId)
+      // Convert date string to Date object if needed
+      const parsedDate = new Date(data.date);
 
-      if (isNaN(data.coachId) || isNaN(data.clientId)) {
+      if (isNaN(parsedDate.getTime())) {
         return response.status(400).json({
-          error: 'Les IDs doivent être des nombres',
-        })
+          error: 'La date doit être valide',
+        });
       }
 
-      const rdv = await this.rdvService.createRdv(data)
-      return response.status(201).json(rdv)
+      const rdv = await this.rdvService.createRdv({
+        coachId: Number(data.coachId),
+        clientId: Number(data.clientId),
+        date: parsedDate, // Pass the parsed date
+      });
+
+      return response.status(201).json(rdv);
     } catch (error) {
       return response.status(400).json({
         error: "Erreur lors de la création du rendez-vous",
         details: error instanceof Error ? error.message : 'Unknown error',
-      })
+      });
     }
   }
+
 
   public async update({ params, request, response }: HttpContext) {
     try {

@@ -30,7 +30,7 @@ export class RdvService {
         }
       }
     });
-  
+
     return rdvs;
   }
 
@@ -134,42 +134,48 @@ export class RdvService {
     });
   }
 
-  async createRdv(data: { coachId: number; clientId: number }) {
+  async createRdv(data: { coachId: number; clientId: number; date: Date }) {
     return await prisma.rdv.create({
       data: {
-        coach: { connect: { id: data.coachId } },
-        client: { connect: { id: data.clientId } }
+        coach: {
+          connect: { id: data.coachId },
+        },
+        client: {
+          connect: { id: data.clientId },
+        },
+        date: data.date, // Ensure date is passed here
       },
       include: {
         coach: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true,
           },
-          client: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              firstname: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true
-            }
-          }
-      }
+        },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            firstname: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
     });
   }
 
+
   async updateRdv(id: number, data: { coachId?: number; clientId?: number }) {
     const updateData: any = {};
-    
+
     if (data.coachId) {
       updateData.coach = { connect: { id: data.coachId } };
     }
