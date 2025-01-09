@@ -33,7 +33,7 @@ export class RdvService {
         date: 'asc'  // Tri par date de RDV
       }
     });
-  
+
     return rdvs;
   }
 
@@ -153,8 +153,8 @@ export class RdvService {
             firstname: true,
             role: true,
             createdAt: true,
-            updatedAt: true
-          }
+            updatedAt: true,
+          },
         },
         client: {
           select: {
@@ -164,16 +164,17 @@ export class RdvService {
             firstname: true,
             role: true,
             createdAt: true,
-            updatedAt: true
-          }
-        }
-      }
+            updatedAt: true,
+          },
+        },
+      },
     });
   }
 
+
   async updateRdv(id: number, data: { coachId?: number; clientId?: number; date?: Date }) {
     const updateData: any = {};
-    
+
     if (data.coachId) {
       updateData.coach = { connect: { id: data.coachId } };
     }
