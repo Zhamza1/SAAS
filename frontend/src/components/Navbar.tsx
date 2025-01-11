@@ -8,7 +8,7 @@ export default function NavBar() {
                 <ul className="flex space-x-6 text-gray-700">
                     <li><a href="/rdvs" className="hover:text-red-500">Services</a></li>
                     <li><a href="#" className="hover:text-red-500">Tarifs</a></li>
-                    <li><a href="/login" className="hover:text-red-500">Connection</a></li>
+                    <li><a href="/login" className="hover:text-red-500">Connexion</a></li>
                 </ul>
             </nav>
             <a href="/register"

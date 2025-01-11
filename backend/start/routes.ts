@@ -11,6 +11,9 @@ import AuthController from '#controllers/http/authController'
 import AuthMiddleware from '#middleware/authMiddleware'
 import router from '@adonisjs/core/services/router'
 import RdvsController from '#controllers/http/rdvs_controllers'
+import PaymentController from '#controllers/http/paymentController'
+import StripeWebhookController from '#controllers/http/stripeWebhookController'
+import rawBodyMiddleware from '#middleware/rawBodyMiddleware'
 
 const authMiddleware = new AuthMiddleware()
 
@@ -24,7 +27,7 @@ router
   })
   .prefix('/api/')
   // .use([AuthMiddleware])
-  .use([authMiddleware.handle.bind(authMiddleware)]);
+  .use([authMiddleware.handle.bind(authMiddleware)])
 
 router
   .group(() => {
@@ -35,11 +38,20 @@ router
     router.delete('rdvs/:id', [RdvsController, 'destroy'])
   })
   .prefix('/api/')
-  .use([authMiddleware.handle.bind(authMiddleware)]);
+  .use([authMiddleware.handle.bind(authMiddleware)])
 
 router
   .group(() => {
     router.post('register', [AuthController, 'register'])
     router.post('login', [AuthController, 'login'])
   })
-  .prefix('/api/auth/');
+  .prefix('/api/auth/')
+
+router
+  .group(() => {
+    router.post('create-checkout-session', [PaymentController, 'createCheckoutSession'])
+    router
+      .post('/webhooks/stripe', [StripeWebhookController, 'handleWebhook'])
+      .middleware([rawBodyMiddleware])
+  })
+  .prefix('/api/payments/')

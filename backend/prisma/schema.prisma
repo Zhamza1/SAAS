@@ -7,27 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// TODO: Mettre role en enum + tard
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  password    String
-  name        String
-  firstname   String
-  role        String
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  coachRdvs      Rdv[]     @relation("CoachRdvs")
-  clientRdvs     Rdv[]     @relation("ClientRdvs")
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  password   String
+  name       String
+  firstname  String
+  role       String
+  price      Float     @default(1.0)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  clientRdvs Rdv[]     @relation("ClientRdvs")
+  coachRdvs  Rdv[]     @relation("CoachRdvs")
 }
 
 model Rdv {
   id        Int      @id @default(autoincrement())
-  coach     User     @relation("CoachRdvs", fields: [coachId], references: [id])
   coachId   Int      @map("coach_id")
-  client    User     @relation("ClientRdvs", fields: [clientId], references: [id])
   clientId  Int      @map("client_id")
-  date      DateTime 
+  date      DateTime
+  price     Float    @default(1.0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  client    User     @relation("ClientRdvs", fields: [clientId], references: [id])
+  coach     User     @relation("CoachRdvs", fields: [coachId], references: [id])
 }

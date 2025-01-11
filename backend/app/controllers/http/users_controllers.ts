@@ -31,7 +31,6 @@ export default class UsersController {
       }
 
       const user = await this.userService.getUserById(id)
-
       if (!user) {
         return response.status(404).json({
           error: 'Utilisateur non trouvé',
