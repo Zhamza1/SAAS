@@ -25,6 +25,7 @@ export const RegisterForm = () => {
   });
 
   const onSubmit = (data: RegisterData) => {
+    console.log(data);
     dispatch(registerUser(data));
   };
 

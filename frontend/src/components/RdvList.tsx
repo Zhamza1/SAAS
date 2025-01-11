@@ -22,7 +22,7 @@ export const RdvList = () => {
     }, [dispatch]);
 
     return (
-        <Card className="mx-auto max-w-4xl">
+        <Card className="mx-auto max-w-4xl mt-12">
             <CardHeader>
                 <CardTitle className="text-2xl">Liste des Rendez-vous</CardTitle>
                 <CardDescription>Visualisez tous les rendez-vous enregistrés.</CardDescription>

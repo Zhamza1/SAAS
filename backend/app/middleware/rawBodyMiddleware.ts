@@ -1,15 +1,18 @@
 import { HttpContext } from '@adonisjs/core/http'
 
 export default async function rawBodyMiddleware(ctx: HttpContext, next: () => Promise<void>) {
-  if (ctx.request.url().includes('/api/payments/webhooks/stripe')) {
-    const rawBody = await new Promise<string>((resolve, reject) => {
-      const chunks: Buffer[] = []
-      ctx.request.request.on('data', (chunk) => chunks.push(chunk))
-      ctx.request.request.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')))
-      ctx.request.request.on('error', reject)
-    })
+  console.log('Middleware: Checking URL for raw body middleware:', ctx.request.url())
 
-    ctx.request.updateRawBody(rawBody)
+  if (ctx.request.url().includes('/api/payments/webhooks/stripe')) {
+    console.log('Middleware: Detected Stripe webhook URL')
+    try {
+      const rawBody = await ctx.request.raw()
+      console.log('Middleware: Raw body retrieved:', rawBody)
+      ctx.request.updateRawBody(rawBody)
+    } catch (err) {
+      console.error('Middleware: Error reading raw body:', err)
+    }
   }
+
   await next()
 }

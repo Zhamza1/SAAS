@@ -17,7 +17,6 @@ model User {
   price      Float     @default(1.0)
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
-  payments   Payment[]
   clientRdvs Rdv[]     @relation("ClientRdvs")
   coachRdvs  Rdv[]     @relation("CoachRdvs")
 }
@@ -32,15 +31,4 @@ model Rdv {
   updatedAt DateTime @updatedAt @map("updated_at")
   client    User     @relation("ClientRdvs", fields: [clientId], references: [id])
   coach     User     @relation("CoachRdvs", fields: [coachId], references: [id])
-}
-
-model Payment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  stripeId  String   @unique
-  amount    Float
-  status    String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id])
 }
