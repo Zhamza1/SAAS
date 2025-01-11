@@ -69,7 +69,8 @@
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.5.0",
     "pg": "^8.13.1",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "stripe": "^17.5.0"
   },
   "hotHook": {
     "boundaries": [
